@@ -6,7 +6,7 @@ function start(s) {
 	// start the socket
 	io = io.listen(s);
 	io.set("polling duration", 1);
-	io.set("close timeout", 3);
+	io.set("close timeout", 2);
 
 	// listen for stuff
 	io.sockets.on('connection', function(socket) {
