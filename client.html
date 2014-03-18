@@ -10,8 +10,14 @@
 				$("#list").html(data['message']);
 			});
 
+			socketio.on("message_online", function(data) {
+				$("#online").html(data["message"]);
+			});
+
+
 			function addCounter() {
 				var msg = $("#msg").val();
+				$("#msg").val("");
 				socketio.emit("message_to_server", {message: msg});
 			}
 		</script>
@@ -22,6 +28,7 @@
 			<input type="text" id="msg" />
 			<button onclick="addCounter();" style="display: inline; 
 			width: 100px; height: 50px">click</button>
+			<p id="online"></p>
 			<p id="list" style="font-size: 30pt"></p>
 		</div>
 	</body>
