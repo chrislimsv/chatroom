@@ -7,11 +7,11 @@
 		<script type="text/javascript">
 			var socketio = io.connect(window.location.hostname, {'connect timeout': 1000});
 			socketio.on("message_to_client", function(data) {
-				$("#counter").html(data['message']);
+				$("#list").html(data['message']);
 			});
 
 			function addCounter() {
-				var msg = "AddCounter";
+				var msg = $("#msg").val();
 				socketio.emit("message_to_server", {message: msg});
 			}
 		</script>
@@ -19,9 +19,10 @@
 	</head>
 	<body>
 		<div style="text-align: center">
+			<input type="text" id="msg" />
 			<button onclick="addCounter();" style="display: inline; 
 			width: 100px; height: 50px">click</button>
-			<p id="counter" style="font-size: 100pt"></p>
+			<p id="list" style="font-size: 30pt"></p>
 		</div>
 	</body>
 </html>
