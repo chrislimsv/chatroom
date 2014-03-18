@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+			var socketio = io.connect("127.0.0.1:1337");
+			socketio.on("message_to_client", function(data) {
+				$("#counter").html(data['message']);
+			});
+
+			function addCounter() {
+				var msg = "AddCounter";
+				socketio.emit("message_to_server", {message: msg});
+			}
+		</script>
+
+	</head>
+	<body>
+		<div style="text-align: center">
+			<button onclick="addCounter();" style="display: inline; 
+			width: 100px; height: 50px">click</button>
+			<p id="counter" style="font-size: 100pt"></p>
+		</div>
+	</body>
+</html>
