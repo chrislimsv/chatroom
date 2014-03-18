@@ -2,7 +2,7 @@ var server = require("./server");
 var router = require("./router");
 var requestHandlers = require("./requestHandlers");
 var socketio = require("./socket.js");
-var portnumber = 1337;
+var portnumber = Number(process.env.PORT || 5000);
 
 var handle={};
 handle["/"] = requestHandlers.start;
