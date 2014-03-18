@@ -4,6 +4,7 @@
   "description": "Test app!",
   "main": "index.js",
   "dependencies": {
+	"ws": "0.4.x",
     "socket.io": "~0.9.16",
     "logfmt": "^1.0.0-pre",
     "express": "^3.4.8"

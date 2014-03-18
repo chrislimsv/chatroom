@@ -5,7 +5,7 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
 		<script type="text/javascript">
-			var socketio = io.connect("127.0.0.1:1337");
+			var socketio = io.connect(window.location.hostname);
 			socketio.on("message_to_client", function(data) {
 				$("#counter").html(data['message']);
 			});
