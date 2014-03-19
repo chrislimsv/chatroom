@@ -12,6 +12,10 @@ function start(s) {
 	// start the socket
 	io = io.listen(s);
 
+	// set timeouts
+	io.set("close timeout", 2);
+	io.set("heartbeat interval", 1);
+
 	// listen for stuff
 	io.sockets.on('connection', function(socket) {
 		// update clients
