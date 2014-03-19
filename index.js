@@ -1,4 +1,4 @@
-var routes = require("./routes");
+var routes = require("./routes.js");
 var socketio = require("./socket.js");
 var appjs = require("./app.js");
 var express = require("express");
