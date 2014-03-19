@@ -1,0 +1,52 @@
+
+.main {
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+	.main .view {
+		text-align: center;
+		float: left;
+		width: 50%;
+	}
+	
+	.main .stats {
+		float: right;
+		width: 50%;
+		text-align: center;
+	}
+
+		.main .stats table {
+			width: 100%;
+			height: 100%;
+		}
+		
+	.main .chat {
+		float: right;
+		width: 50%;
+	}
+	
+		.main .chat .box {
+			display: block;
+			float: left;
+			width: 80%;
+			height: 30px;
+		}
+
+		.main .chat .send {
+			display: inline-block;
+			float: right;
+			width: 20%;
+			height: 30px;
+		}
+
+		.main .chat .content {
+			display: block;
+			float: bottom;
+			width: 100%;
+			height: 300px;
+			overflow: scroll;
+		}
+
+
+
