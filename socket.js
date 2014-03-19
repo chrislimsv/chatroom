@@ -44,7 +44,7 @@ function start(s) {
 			var index = msg.toLowerCase().search("write");
 			if (index != -1) 
 			{
-				var global_msg = msg.substring(index+5,msg.length);
+				global_msg = msg.substring(index+5,msg.length);
 				io.sockets.emit("update_global_msg", {message: global_msg});
 			}
 		});
