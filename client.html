@@ -4,32 +4,66 @@
 	<head>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
+
+		<!-- boostrap -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">		
+
+		<!-- socket io -->
 		<script type="text/javascript">
 			var socketio = io.connect(window.location.hostname, {'connect timeout': 1000});
+
+			// receiving
 			socketio.on("message_to_client", function(data) {
-				$("#list").html(data['message']);
+				$("#content").append("<br />" + data['message']);
 			});
 
 			socketio.on("message_online", function(data) {
 				$("#online").html(data["message"]);
 			});
 
+			socketio.on("send_chat", function(data) {
+				$("#content").append("<br />" + data['message']);
+			});
+		
+			socketio.on("update_global_msg", function(data) {
+				$("#global_msg").html(data['message']);
+			});
 
-			function addCounter() {
+			// sending
+			function sendMessage() {
 				var msg = $("#msg").val();
 				$("#msg").val("");
 				socketio.emit("message_to_server", {message: msg});
 			}
+
 		</script>
 
 	</head>
 	<body>
-		<div style="text-align: center">
-			<input type="text" id="msg" />
-			<button onclick="addCounter();" style="display: inline; 
-			width: 100px; height: 50px">click</button>
-			<p id="online"></p>
-			<p id="list" style="font-size: 30pt"></p>
+		<div class="main">
+			<div class="view">
+				<h1>Global Msg</h1>
+				<h2 id="global_msg"></h2>
+			</div>
+			<div class="stats">
+				<p id="online"></p>
+			</div>
+			<div class="chat">
+				<div class="content">
+					<p id="content"></p>
+				</div>
+				<input id="msg" type="text" class="form-control box" />
+				<button onclick="sendMessage()" type="button" class="btn btn-primary send">
+				Submit</button>	
+			</div>
 		</div>
 	</body>
+
+	<script>
+		// enable enter key
+		$("#msg").keypress(function (e) {
+			if (e.which == 13) sendMessage();
+		});
+	</script>
 </html>

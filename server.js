@@ -2,13 +2,10 @@ var http = require("http");
 var url = require("url");
 var sys = require("sys");
 
-function start(portnumber, route, handle) {
-	function onRequest(request, response) {
-		var pathname = url.parse(request.url).pathname;
-		route(handle, pathname, response, request);
-	}
 
-	var server = http.createServer(onRequest).listen(portnumber);
+function start(app) {
+
+	var server = http.createServer(app).listen(app.get('port'));
 	sys.puts("Server has started.");
 
 	return server;

@@ -1,32 +1,60 @@
 var io = require("socket.io");
-var result = "";
 var online = 0;
+var clients = [];
+var global_msg = "";
+
+function onlineMessage() {
+	return "There are <b>" + clients.length + "</b> people online.";
+}
+
 
 function start(s) {
 	// start the socket
 	io = io.listen(s);
-	io.set("polling duration", 1);
-	io.set("close timeout", 2);
 
 	// listen for stuff
 	io.sockets.on('connection', function(socket) {
-		online++;
+		// update clients
+		clients.push(socket);
 
-		socket.emit("message_to_client", {message: result}); 
-		io.sockets.emit('message_online', {message: "There are " + online +
-			" people online!"});
+		// update online count
+		io.sockets.emit('message_online', {message: onlineMessage()}); 
+		
+		// send out global message to user
 
+		socket.emit("update_global_msg", {message: global_msg});
+
+		// new user message
+		var new_user = "<i>A new user signed in.</i>";
+		io.sockets.emit('send_chat', {message: new_user}); 
+
+		// listen to messages
 		socket.on('message_to_server', function(data) {
-			result += "\n" + data["message"];
-			io.sockets.emit("message_to_client", {message: result});
+			// add timestamp to message			
+			var date = new Date();
+			var msg = "<b>User:</b> " + data["message"];
+			// parse message to send back appropriate data
+			io.sockets.emit("send_chat", {message: msg});
+
+			// check if it's a command
+			var index = msg.toLowerCase().search("write");
+			if (index != -1) 
+			{
+				var global_msg = msg.substring(index+5,msg.length);
+				io.sockets.emit("update_global_msg", {message: global_msg});
+			}
 		});
 
+		// disconnect
 		socket.on('disconnect', function () {
-			online--;
-			io.sockets.emit('message_online', {message: "There are " + online +
-				" people online!"});
-			
+			//update eclients
+			var i = clients.indexOf(socket);
+			clients.splice(i,1);
+
+			io.sockets.emit('message_online', {message: onlineMessage()}); 
+			io.sockets.emit('send_chat', {message: "<i>A user signed out.</i>"});
 		});
+
 
 	});
 
