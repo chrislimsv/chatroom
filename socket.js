@@ -107,16 +107,15 @@ function start(s) {
 					// parse message to send back appropriate data
 					io.sockets.emit("emit_command", {type: "chat", message: new_msg});
 				} 
-				else if (type == "doge")
-				{
-					io.sockets.emit("emit_command", {type: "image", name: "doge", userid: id});
-				}
 			}
 			// else send regular message
 			else 
 			{
 				// add userid 
 				var new_msg = "<b>User " + id + ":</b> " + msg; 
+
+				// process string (poor programming practice)
+				new_msg = new_msg.replace(/doge/g, "<img src='static/img/doge.jpg'>");
 
 				// parse message to send back appropriate data
 				io.sockets.emit("emit_command", {type: "chat", message: new_msg});
