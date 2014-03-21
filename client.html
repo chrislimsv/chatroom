@@ -4,30 +4,50 @@
 	<head>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
+		<script src="static/library.js"></script>		
 
 		<!-- boostrap -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<link href="css/style.css" rel="stylesheet">		
+		<link href="static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="static/css/style.css" rel="stylesheet">		
+
+		<!-- google fonts -->
+	   	<link href='http://fonts.googleapis.com/css?family=Carrois+Gothic+SC|Lusitana' rel='stylesheet' type='text/css'>
+
 
 		<!-- socket io -->
 		<script type="text/javascript">
 			var socketio = io.connect(window.location.hostname, {'connect timeout': 1000});
 
-			// receiving
-			socketio.on("message_to_client", function(data) {
-				$("#content").append("<br />" + data['message']);
-			});
 
-			socketio.on("message_online", function(data) {
-				$("#online").html(data["message"]);
-			});
+			// receiving chat content
+			socketio.on("emit_command", function(data) {
+				if (data["type"] == "chat")
+				{
+					$("#content").append("<br />" + data['message']);
+					var div = $("#content-div");
+					div.scrollTop(div.prop("scrollHeight"));
+				}
+				else if (data["type"] == "global")
+					$("#global_msg").html(data['message']);
+				else if (data["type"] == "online")
+					$("#online").html(data["message"]);
+				else if (data["type"] == "userid")
+					$("#userid").html("Your ID is <b>"+data["userid"]+"</b>.");
 
-			socketio.on("send_chat", function(data) {
-				$("#content").append("<br />" + data['message']);
-			});
-		
-			socketio.on("update_global_msg", function(data) {
-				$("#global_msg").html(data['message']);
+				// custom commands!
+				else if (data["type"] == "open_url")
+				{
+					window.open(data["url"]);	
+				}
+				else if (data["type"] == "clear")
+				{
+					$("#content").html("");
+				}
+				else if (data["type"] == "popup")
+				{
+					window.alert(data["message"]);
+				}
+
 			});
 
 			// sending
@@ -42,20 +62,19 @@
 	</head>
 	<body>
 		<div class="main">
-			<div class="view">
-				<h1>Global Msg</h1>
-				<h2 id="global_msg"></h2>
+			<div class="title">CHAT ROOM</div>
+			<hr>
+			<div class="global" id="global_msg">
 			</div>
-			<div class="stats">
-				<p id="online"></p>
-			</div>
+			<hr>
 			<div class="chat">
-				<div class="content">
+				<div class="content" id="content-div">
 					<p id="content"></p>
 				</div>
 				<input id="msg" type="text" class="form-control box" />
-				<button onclick="sendMessage()" type="button" class="btn btn-primary send">
-				Submit</button>	
+			</div>
+			<div class="stats">
+				<p><span id="userid"></span> <span id="online"></span></p>
 			</div>
 		</div>
 	</body>
@@ -65,5 +84,8 @@
 		$("#msg").keypress(function (e) {
 			if (e.which == 13) sendMessage();
 		});
+
+		// focus on msg
+		$("#msg").focus();
 	</script>
 </html>

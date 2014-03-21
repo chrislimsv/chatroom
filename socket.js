@@ -1,10 +1,17 @@
 var io = require("socket.io");
-var online = 0;
-var clients = [];
-var global_msg = "";
+var commands = require("./commands.js");
+var sockets_struct = require("./sockets_struct.js");
+var empty_global_msg = "<i>No global message</i>";
+var global_msg = empty_global_msg;
+var max_id = 50000;
+
+var sockets = new sockets_struct.Sockets(max_id);
 
 function onlineMessage() {
-	return "There are <b>" + clients.length + "</b> people online.";
+	if (sockets.numOfSockets() == 1)
+		return "You are the only user online.";
+	else
+		return "There are <b>" + sockets.numOfSockets() + "</b> people online.";
 }
 
 
@@ -13,50 +20,103 @@ function start(s) {
 	io = io.listen(s);
 
 	// set timeouts
-	io.set("close timeout", 2);
-	io.set("polling duration", 1);
+//	io.set("close timeout", 2);
+//	io.set("polling duration", 1);
+//	io.set("heartbeat interval", 1);
 
 	// listen for stuff
 	io.sockets.on('connection', function(socket) {
-		// update clients
-		clients.push(socket);
+		// assign id to user
+		var id = sockets.addSocket(socket);
 
+		// push userid 
+		socket.emit("emit_command", {type: "userid", userid: id});
+		
 		// update online count
-		io.sockets.emit('message_online', {message: onlineMessage()}); 
+		io.sockets.emit('emit_command', {type: "online",
+									 message: onlineMessage()}); 
 		
 		// send out global message to user
-
-		socket.emit("update_global_msg", {message: global_msg});
+		socket.emit("emit_command", {type: "global", message: global_msg});
 
 		// new user message
-		var new_user = "<i>A new user signed in.</i>";
-		io.sockets.emit('send_chat', {message: new_user}); 
+		var new_user = "<i>User " + id + " signed in.</i>";
+		io.sockets.emit('emit_command', {type: "chat", message: new_user}); 
 
 		// listen to messages
 		socket.on('message_to_server', function(data) {
-			// add timestamp to message			
-			var date = new Date();
-			var msg = "<b>User:</b> " + data["message"];
-			// parse message to send back appropriate data
-			io.sockets.emit("send_chat", {message: msg});
+			var msg = data["message"];
+
 
 			// check if it's a command
-			var index = msg.toLowerCase().search("write");
-			if (index != -1) 
+			var type = commands.parse_string(msg);
+			if (type != false) 
 			{
-				global_msg = msg.substring(index+5,msg.length);
-				io.sockets.emit("update_global_msg", {message: global_msg});
+				if (type == "write ")
+				{
+					global_msg = msg.substring(type.length, msg.length);
+					io.sockets.emit("emit_command", {type: "global", message: global_msg});
+				}
+				else if (type == "open ")
+				{
+					var url = msg.substring(type.length,msg.length);
+					// if url doesn't start with http, add it
+					if (url.indexOf("http") == -1) url = "http://" + url;
+					io.sockets.emit("emit_command", {type: "open_url", url: url});
+				}
+				else if (type == "clear")
+				{
+					socket.emit("emit_command", {type: "clear"});
+				}
+				else if (type == "send ")
+				{
+					var rest = msg.substring(type.length, msg.length);
+					if (rest.indexOf(" ") != -1) 
+					{
+						var target_id = parseInt(rest.substring(0,rest.indexOf(" ")), 10);
+						var target_socket = sockets.getSocket(target_id);
+						var target_msg = rest.substring(rest.indexOf(" ")+1, rest.length);
+						target_msg = "From User " + id + ": " + target_msg;
+
+						if (target_socket != null)
+						{
+							target_socket.emit("emit_command", {type: "popup", message:	target_msg});
+							var success_msg = "<i>The message was successfully sent to <b>User " + target_id + "</b>.</i>";
+							socket.emit("emit_command", {type: "chat", message: success_msg});
+						}
+						else
+						{
+							var fail_msg = "<i>Target id is invalid. Please try again.</i>";
+							socket.emit("emit_command", {type: "chat", message: fail_msg});
+						}	
+					}
+					else
+					{
+						var fail_msg = "<i>Invalid format. Please try again.</i>";
+						socket.emit("emit_command", {type: "chat", message: fail_msg});
+					}	
+					
+				}
+			}
+			// else send regular message
+			else 
+			{
+				// add userid 
+				var new_msg = "<b>User " + id + ":</b> " + msg; 
+
+				// parse message to send back appropriate data
+				io.sockets.emit("emit_command", {type: "chat", message: new_msg});
 			}
 		});
 
 		// disconnect
 		socket.on('disconnect', function () {
 			//update eclients
-			var i = clients.indexOf(socket);
-			clients.splice(i,1);
+			sockets.removeSocketById(id);
 
-			io.sockets.emit('message_online', {message: onlineMessage()}); 
-			io.sockets.emit('send_chat', {message: "<i>A user signed out.</i>"});
+			io.sockets.emit('emit_command', {type: "online",
+										 message: onlineMessage()}); 
+			io.sockets.emit('emit_command', {type: "chat", message: "<i>User " + id + " signed out.</i>"});
 		});
 
 

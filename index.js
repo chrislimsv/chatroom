@@ -12,7 +12,7 @@ var app = appjs.app;
 app.get("/", routes.start);
 
 // set up statics
-app.use("/css",express.static(__dirname + '/css'));
+app.use("/static",express.static(__dirname + '/static'));
 
 // start socket
 socketio.start(server);
