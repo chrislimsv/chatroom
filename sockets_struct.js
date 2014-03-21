@@ -3,6 +3,7 @@ function Sockets(max) {
 	this.id_to_socket = [];
 	this.current_id = 0;
 	this.max_id = max;
+	this.counter = 0;
 
 	this.addSocket = function(socket) {
 		do
@@ -14,7 +15,8 @@ function Sockets(max) {
 
 		this.userids.push(this.current_id);
 		this.id_to_socket[this.current_id] = socket;
-
+		this.counter++;
+	
 		return this.current_id;
 	};
 
