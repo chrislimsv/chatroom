@@ -20,7 +20,7 @@ function start(s) {
 	io = io.listen(s);
 
 	// set timeouts
-//	io.set("close timeout", 2);
+	io.set("close timeout", 2);
 //	io.set("polling duration", 1);
 //	io.set("heartbeat interval", 1);
 
