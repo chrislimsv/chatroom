@@ -70,4 +70,28 @@ hr {
 			height: 125px;
 		}
 
+	
+	.main .info-wrapper {
+
+	}
+	
+		.main .info-wrapper .stats {
+			width: 50%;
+			float: left;
+			font-family: 'Lusitana', serif;
+			font-size: 15px;	
+		}
+			.main .info-wrapper .stats b {
+				color: #6B1E25;
+				font-size: 20px;
+			}
 		
+		.main .info-wrapper .toggles {
+			width: 50%;
+			float: right;
+			text-align: right;
+		}
+
+		.modal {
+			text-align: left;
+		}
