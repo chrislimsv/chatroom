@@ -20,9 +20,10 @@ function start(s) {
 	io = io.listen(s);
 
 	// set timeouts
-	io.set("close timeout", 2);
+//	io.set("close timeout", 2;
 //	io.set("polling duration", 1);
-//	io.set("heartbeat interval", 1);
+	io.set("heartbeat interval", 3);
+	io.set("heartbeat timeout", 4);
 
 	// listen for stuff
 	io.sockets.on('connection', function(socket) {
