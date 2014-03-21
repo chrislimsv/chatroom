@@ -28,8 +28,7 @@
 
 		<!-- socket io -->
 		<script type="text/javascript">
-			var socketio = io.connect(window.location.hostname, {'connect timeout': 1000});
-
+			var socketio = io.connect();
 
 			// receiving chat content
 			socketio.on("emit_command", function(data) {
