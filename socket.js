@@ -20,9 +20,10 @@ function start(s) {
 	io = io.listen(s);
 
 	// set timeouts
-//	io.set("close timeout", 4);
-//	io.set("polling duration", 1);
+	io.set("close timeout", 3);
+	io.set("polling duration", 2);
 //	io.set("heartbeat interval", 3);
+
 	io.configure(function () { 
 	  io.set("transports", ["xhr-polling"]); 
 	  io.set("polling duration", 10); 
