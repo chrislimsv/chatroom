@@ -47,7 +47,17 @@
 				{
 					window.alert(data["message"]);
 				}
+				else if (data["type"] == "image")
+				{
+					var imgSrc;
+					if (data["name"] == "doge")
+						imgSrc = "static/img/doge.jpg";	
 
+					$("#content").append('<br /><b>User ' + data["userid"] + ':</b><img src="'+imgSrc+'">' );
+					var div = $("#content-div");
+					div.scrollTop(div.prop("scrollHeight"));
+				}
+			
 			});
 
 			// sending

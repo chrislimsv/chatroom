@@ -64,3 +64,10 @@ hr {
 			border-width: 10px;
 		}
 
+		.main .chat .content img {
+			display: inline;
+			width: 125px;
+			height: 125px;
+		}
+
+		
