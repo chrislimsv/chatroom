@@ -12,8 +12,17 @@ function parse_string(str) {
 	return false;
 }
 
+function process_msg(str) {
+	return replace_doge(str);
+}
+
+function replace_doge(str) {
+	// process string (poor programming practice)
+	return str.replace(/doge/g, "<img src='static/img/doge.jpg'>");
+}
 
 exports.parse_string = parse_string;
+exports.process_msg = process_msg;
 
 
 

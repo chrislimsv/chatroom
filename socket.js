@@ -103,6 +103,7 @@ function start(s) {
 
 					// make text large
 					new_msg = '<span style="font-size: 30pt">' + new_msg + '</span>';
+					new_msg = commands.process_msg(new_msg);
 
 					// parse message to send back appropriate data
 					io.sockets.emit("emit_command", {type: "chat", message: new_msg});
@@ -113,9 +114,7 @@ function start(s) {
 			{
 				// add userid 
 				var new_msg = "<b>User " + id + ":</b> " + msg; 
-
-				// process string (poor programming practice)
-				new_msg = new_msg.replace(/doge/g, "<img src='static/img/doge.jpg'>");
+				new_msg = commands.process_msg(new_msg);
 
 				// parse message to send back appropriate data
 				io.sockets.emit("emit_command", {type: "chat", message: new_msg});
