@@ -96,26 +96,6 @@ function start(s) {
 						socket.emit("emit_command", {type: "chat", message: fail_msg});
 					}	
 				}
-				else if (type == "fu ")
-				{
-					var rest = msg.substring(type.length, msg.length);
-					var target_id = parseInt(rest, 10);
-					var target_socket = sockets.getSocket(target_id);
-					target_msg = "FUCK YOU";
-
-					if (target_socket != null)
-					{
-						target_socket.emit("emit_command", {type: "popup", message:	target_msg});
-						var success_msg = "<i>Your sincerest wishes were successfully delivered to <b>User " + target_id + "</b>.</i>";
-						socket.emit("emit_command", {type: "chat", message: success_msg});
-					}
-					else
-					{
-						var fail_msg = "<i>Target id is invalid. Please try again.</i>";
-						socket.emit("emit_command", {type: "chat", message: fail_msg});
-					}	
-
-				}
 				else if (type == "lg ") 
 				{
 					// add userid 

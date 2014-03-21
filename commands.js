@@ -1,4 +1,4 @@
-var types = ["write ", "open ", "clear", "send ", "lg ", "fu "];
+var types = ["write ", "open ", "clear", "send ", "lg "];
 
 function parse_string(str) {
 	str = str.toLowerCase();
