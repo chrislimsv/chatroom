@@ -23,6 +23,10 @@ function start(s) {
 //	io.set("close timeout", 4);
 //	io.set("polling duration", 1);
 //	io.set("heartbeat interval", 3);
+	io.configure(function () { 
+	  io.set("transports", ["xhr-polling"]); 
+	  io.set("polling duration", 10); 
+	}); 
 
 	// listen for stuff
 	io.sockets.on('connection', function(socket) {
