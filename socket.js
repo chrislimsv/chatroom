@@ -95,8 +95,18 @@ function start(s) {
 						var fail_msg = "<i>Invalid format. Please try again.</i>";
 						socket.emit("emit_command", {type: "chat", message: fail_msg});
 					}	
-					
 				}
+				else if (type == "lg ") 
+				{
+					// add userid 
+					var new_msg = "<b>User " + id + ":</b> " + msg.substring(type.length, msg.length); 
+
+					// make text large
+					new_msg = '<span style="font-size: 30pt">' + new_msg + '</span>';
+
+					// parse message to send back appropriate data
+					io.sockets.emit("emit_command", {type: "chat", message: new_msg});
+				} 
 			}
 			// else send regular message
 			else 
