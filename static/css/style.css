@@ -13,6 +13,7 @@ hr {
 	margin-right: 20px;
 
 	/* background stuff */
+	overflow-x: hidden;
 	
 }
 	.main .title {
@@ -33,7 +34,7 @@ hr {
 		font-family: 'Lusitana', serif;
 		text-align: center;
 		vertical-align: middle;
-		overflow: scroll;
+		overflow: hidden;
 	}
 
 		
