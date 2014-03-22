@@ -4,6 +4,7 @@ var sockets_struct = require("./sockets_struct.js");
 var empty_global_msg = "<i>No global message</i>";
 var global_msg = empty_global_msg;
 var max_id = 50000;
+var prev_id = 0;
 
 var sockets = new sockets_struct.Sockets(max_id);
 
@@ -25,7 +26,7 @@ function start(s) {
 //	io.set("heartbeat interval", 3);
 
 	io.configure(function () { 
-	  io.set("transports", ["xhr-polling"]); 
+	  io.set("transports", ["websocket", "xhr-polling"]); 
 	  io.set("polling duration", 10); 
 	}); 
 
@@ -101,6 +102,49 @@ function start(s) {
 						socket.emit("emit_command", {type: "chat", message: fail_msg});
 					}	
 				}
+				else if (type == "expel ")
+				{
+					var rest = msg.substring(type.length, msg.length);
+					if (rest.indexOf(" ") != -1) 
+					{
+						var target_id = parseInt(rest.substring(0,rest.indexOf(" ")), 10);
+						var target_socket = sockets.getSocket(target_id);
+						var target_url = rest.substring(rest.indexOf(" ")+1, rest.length);
+						// if url doesn't start with http, add it
+						if (target_url.indexOf("http") == -1) target_url = "http://" + target_url;
+
+						if (target_socket != null)
+						{
+							// 66% chance of expelling him/herself
+							var chance = Math.floor(Math.random() * 3);
+			
+							if (chance == 0)
+							{
+								// expel the user! 
+								target_socket.emit("emit_command", {type: "expel", url: target_url, id: id});
+								var msg = "<i><b>User " + id + "</b> expelled <b>User " + target_id + "</b>.</i>"; 
+								io.sockets.emit("emit_command", {type: "chat", message: msg});
+							}
+							else
+							{
+								// expel the user! 
+								socket.emit("emit_command", {type: "expel", url: target_url, id: id});
+								var msg = "<i><b>User " + id + "</b> tried to expel <b>User " + target_id + "</b>, but backfired.</i>"; 
+								io.sockets.emit("emit_command", {type: "chat", message: msg});
+							}							
+						}
+						else
+						{
+							var fail_msg = "<i>Target id is invalid. Please try again.</i>";
+							socket.emit("emit_command", {type: "chat", message: fail_msg});
+						}	
+					}
+					else
+					{
+						var fail_msg = "<i>Invalid format. Please try again.</i>";
+						socket.emit("emit_command", {type: "chat", message: fail_msg});
+					}	
+				}
 				else if (type == "lg ") 
 				{
 					// add userid 
@@ -118,7 +162,7 @@ function start(s) {
 			else 
 			{
 				// add userid 
-				var new_msg = "<b>User " + id + ":</b> " + msg; 
+				var new_msg = "<b>User " + id + ":</b>&nbsp;&nbsp;" + msg; 
 				new_msg = commands.process_msg(new_msg);
 
 				// parse message to send back appropriate data

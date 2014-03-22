@@ -59,6 +59,11 @@
 				{
 					window.alert(data["message"]);
 				}
+				else if (data["type"] == "expel")
+				{
+					window.alert("You were expelled by User " + data["id"] + "!");	
+					window.location = data["url"];
+				}
 			
 			});
 
@@ -105,8 +110,9 @@
 										<li><b>clear</b> to clear your chat window</li>
 										<li><b>send (userid) (msg)</b> to send a pop-up message to a given userid</li>
 										<li><b>doge</b> to invoke doge</li>
-										<li><b>open url</b> to open a specified url for all users (pop-up blockers oftentimes prohibit this feature)</li>
+										<li><b>open (url)</b> to open a specified url for all users (pop-up blockers oftentimes prohibit this feature)</li>
 										<li><b>lg (msg)</b> to write a message in larger font
+										<li><b>expel (userid) (msg)</b> to banish a user to a specified url (<b>NOTE:</b> there is a 66% chance of backfiring) 
 									</ul>
 								</div>
 							   <div class="modal-footer">
