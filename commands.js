@@ -21,8 +21,32 @@ function replace_doge(str) {
 	return str.replace(/doge/g, "<img src='static/img/doge.jpg'>");
 }
 
+var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+  };
+
+function escapeHtml(string) {
+	return String(string).replace(/[&<>"'\/]/g, function (s) {
+	  return entityMap[s];
+	});
+}
+
+function escapeQuotes(string) {
+	return String(string).replace(/["']/g, function (s) {
+	  return entityMap[s];
+	});
+
+}
+
 exports.parse_string = parse_string;
 exports.process_msg = process_msg;
+exports.escapeHtml = escapeHtml;
+exports.escapeQuotes = escapeQuotes;
 
 
 

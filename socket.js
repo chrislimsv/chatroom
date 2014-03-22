@@ -61,6 +61,7 @@ function start(s) {
 				if (type == "write ")
 				{
 					global_msg = msg.substring(type.length, msg.length);
+					global_msg = commands.escapeHtml(global_msg);
 					io.sockets.emit("emit_command", {type: "global", message: global_msg});
 				}
 				else if (type == "open ")
@@ -68,6 +69,9 @@ function start(s) {
 					var url = msg.substring(type.length,msg.length);
 					// if url doesn't start with http, add it
 					if (url.indexOf("http") == -1) url = "http://" + url;
+	
+					// escape quotes
+					url = commands.escapeQuotes(url);
 					io.sockets.emit("emit_command", {type: "open_url", url: url});
 				}
 				else if (type == "clear")
@@ -83,6 +87,8 @@ function start(s) {
 						var target_socket = sockets.getSocket(target_id);
 						var target_msg = rest.substring(rest.indexOf(" ")+1, rest.length);
 						target_msg = "From User " + id + ": " + target_msg;
+
+						target_msg = commands.escapeQuotes(target_msg);
 
 						if (target_socket != null)
 						{
@@ -112,6 +118,8 @@ function start(s) {
 						var target_url = rest.substring(rest.indexOf(" ")+1, rest.length);
 						// if url doesn't start with http, add it
 						if (target_url.indexOf("http") == -1) target_url = "http://" + target_url;
+			
+						target_url = commands.escapeQuotes(target_url);
 
 						if (target_socket != null)
 						{
@@ -153,6 +161,7 @@ function start(s) {
 					// make text large
 					new_msg = '<span style="font-size: 30pt">' + new_msg + '</span>';
 					new_msg = commands.process_msg(new_msg);
+					new_msg = commands.escapeHtml(new_msg);
 
 					// parse message to send back appropriate data
 					io.sockets.emit("emit_command", {type: "chat", message: new_msg});
@@ -164,6 +173,7 @@ function start(s) {
 				// add userid 
 				var new_msg = "<b>User " + id + ":</b>&nbsp;&nbsp;" + msg; 
 				new_msg = commands.process_msg(new_msg);
+				new_msg = commands.escapeHtml(new_msg);
 
 				// parse message to send back appropriate data
 				io.sockets.emit("emit_command", {type: "chat", message: new_msg});
