@@ -30,6 +30,11 @@ var entityMap = {
     "/": '&#x2F;'
   };
 
+var quotesMap = {
+	'"': '\"',
+	"'": "\'"
+};
+
 function escapeHtml(string) {
 	return String(string).replace(/[&<>"'\/]/g, function (s) {
 	  return entityMap[s];
@@ -38,7 +43,7 @@ function escapeHtml(string) {
 
 function escapeQuotes(string) {
 	return String(string).replace(/["']/g, function (s) {
-	  return entityMap[s];
+	  return quotesMap[s];
 	});
 
 }

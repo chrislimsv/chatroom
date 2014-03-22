@@ -156,12 +156,12 @@ function start(s) {
 				else if (type == "lg ") 
 				{
 					// add userid 
-					var new_msg = "<b>User " + id + ":</b> " + msg.substring(type.length, msg.length); 
+					var escaped = commands.escapeHtml(msg.substring(type.length, msg.length));
+					var new_msg = "<b>User " + id + ":</b> " + escaped; 
 
 					// make text large
 					new_msg = '<span style="font-size: 30pt">' + new_msg + '</span>';
 					new_msg = commands.process_msg(new_msg);
-					new_msg = commands.escapeHtml(new_msg);
 
 					// parse message to send back appropriate data
 					io.sockets.emit("emit_command", {type: "chat", message: new_msg});
@@ -171,9 +171,8 @@ function start(s) {
 			else 
 			{
 				// add userid 
-				var new_msg = "<b>User " + id + ":</b>&nbsp;&nbsp;" + msg; 
+				var new_msg = "<b>User " + id + ":</b>&nbsp;&nbsp;" + commands.escapeHtml(msg); 
 				new_msg = commands.process_msg(new_msg);
-				new_msg = commands.escapeHtml(new_msg);
 
 				// parse message to send back appropriate data
 				io.sockets.emit("emit_command", {type: "chat", message: new_msg});
